@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Judy!</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .element {
+            position: absolute;
+            color: rgba(100, 149, 237, 0.6);
+            animation: float 6s infinite ease-in-out;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        .fade-in {
+            animation: fadeIn 2s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse-cake {
+            animation: pulseCake 2s infinite;
+        }
+        @keyframes pulseCake {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .glow {
+            box-shadow: 0 0 20px rgba(100, 149, 237, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(100, 149, 237, 0.5); }
+            to { box-shadow: 0 0 30px rgba(100, 149, 237, 0.8); }
+        }
+        .birthday-card {
+            background: linear-gradient(135deg, #fff 0%, #e6f0fa 100%);
+            border: 2px solid #add8e6;
+        }
+        .message-popup {
+            transform: scale(0);
+            transition: transform 0.3s ease-in-out;
+        }
+        .message-popup.show {
+            transform: scale(1);
+        }
+        .nav-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        .nav-menu.active {
+            transform: translateX(0);
+        }
+        @media (max-width: 768px) {
+            .nav-menu {
+                transform: translateX(100%);
+                background-color: #FFB6C1;
+            }
+            .nav-menu.active {
+                transform: translateX(0);
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFB6C1',
+                        secondary: '#6495ED'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-pink-50 overflow-x-hidden">
+    <audio id="backgroundMusic" loop>
+        <source src="bday.mp3" type="audio/mpeg">
+    </audio>
+    <div class="fixed bottom-4 right-4 z-50">
+        <button id="musicToggle" class="bg-gradient-to-r from-blue-400 to-pink-400 text-white p-3 rounded-full shadow-lg hover:from-blue-500 hover:to-pink-500 transition-all duration-300">
+            <i class="ri-volume-up-fill text-xl"></i>
+        </button>
+    </div>
+
+    <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-md z-40">
+        <div class="max-w-7xl mx-auto px-8 flex items-center justify-between py-4">
+            <div class="text-2xl font-['Dancing_Script'] text-secondary">For Judy</div>
+            <button id="menuToggle" class="md:hidden text-secondary focus:outline-none">
+                <i class="ri-menu-line text-2xl"></i>
+            </button>
+            <ul id="navMenu" class="nav-menu hidden md:flex space-x-6 font-['Dancing_Script'] text-gray-700">
+                <li><a href="#hero" class="hover:text-primary transition-colors">Home</a></li>
+                <li><a href="#gallery" class="hover:text-primary transition-colors">Memories</a></li>
+                <li><a href="#letter" class="hover:text-primary transition-colors">Birthday Letter</a></li>
+                <li><a href="#messages" class="hover:text-primary transition-colors">Wishes</a></li>
+                <li><a href="#celebration" class="hover:text-primary transition-colors">Celebration</a></li>
+            </ul>
+        </div>
+        <div id="mobileMenu" class="nav-menu fixed top-0 right-0 h-full w-3/4 bg-white shadow-lg p-8 md:hidden transform translate-x-full transition-transform duration-300">
+            <button id="closeMenu" class="absolute top-4 right-4 text-secondary focus:outline-none">
+                <i class="ri-close-line text-2xl"></i>
+            </button>
+            <ul class="flex flex-col space-y-6 font-['Dancing_Script'] text-gray-700 mt-16">
+                <li><a href="#hero" class="hover:text-primary transition-colors">Home</a></li>
+                <li><a href="#gallery" class="hover:text-primary transition-colors">Memories</a></li>
+                <li><a href="#letter" class="hover:text-primary transition-colors">Birthday Letter</a></li>
+                <li><a href="#messages" class="hover:text-primary transition-colors">Wishes</a></li>
+                <li><a href="#celebration" class="hover:text-primary transition-colors">Celebration</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="floating-elements">
+        <div class="element text-2xl" style="left: 10%; animation-delay: 0s;"><i class="ri-cake-2-fill"></i></div>
+        <div class="element text-xl" style="left: 20%; animation-delay: 1s;"><i class="ri-flower-fill"></i></div>
+        <div class="element text-3xl" style="left: 30%; animation-delay: 2s;"><i class="ri-cake-2-fill"></i></div>
+        <div class="element text-lg" style="left: 40%; animation-delay: 3s;"><i class="ri-flower-fill"></i></div>
+        <div class="element text-2xl" style="left: 50%; animation-delay: 4s;"><i class="ri-cake-2-fill"></i></div>
+        <div class="element text-xl" style="left: 60%; animation-delay: 5s;"><i class="ri-flower-fill"></i></div>
+        <div class="element text-3xl" style="left: 70%; animation-delay: 1.5s;"><i class="ri-cake-2-fill"></i></div>
+        <div class="element text-lg" style="left: 80%; animation-delay: 2.5s;"><i class="ri-flower-fill"></i></div>
+        <div class="element text-2xl" style="left: 90%; animation-delay: 3.5s;"><i class="ri-cake-2-fill"></i></div>
+    </div>
+
+    <section id="hero" class="relative min-h-screen flex items-center justify-center" style="background-image: url('pink.jpg'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 bg-gradient-to-r from-white/80 via-blue-50/60 to-transparent"></div>
+        <div class="relative z-10 w-full max-w-7xl mx-auto px-8">
+            <div class="flex items-center min-h-screen">
+                <div class="w-full lg:w-1/2 fade-in">
+                    <h1 class="text-5xl lg:text-7xl font-['Dancing_Script'] text-secondary mb-6 leading-tight">
+                        Happy Birthday, Judy!<br>
+                        <span class="text-primary">My Amazing Sister</span><br>
+                        July 6
+                    </h1>
+                    <p class="text-xl font-['Poppins'] text-gray-700 mb-8 leading-relaxed">
+                        You've always been my partner-in-crime,<br>
+                        my confidante, and my best friend.
+                    </p>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 flex items-center justify-center">
+                            <i class="ri-cake-2-fill text-3xl text-primary pulse-cake"></i>
+                        </div>
+                        <span class="text-lg font-['Poppins'] text-secondary font-medium">With all my love, Edwin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-['Dancing_Script'] text-secondary mb-4">Our Shared Memories</h2>
+                <p class="text-lg font-['Poppins'] text-gray-600">Every moment with you is a treasure, Judy</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <img src="sister1.png" alt="Laughing together" class="w-full h-80 object-cover object-top">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 sonorita"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="font-['Dancing_Script'] text-2xl">Laughing together</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <img src="sister2.png" alt="Our adventures" class="w-full h-80 object-cover object-top">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="font-['Dancing_Script'] text-2xl">Our adventures</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <img src="sister3.png" alt="Silly moments" class="w-full h-80 object-cover object-top">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="font-['Dancing_Script'] text-2xl">Silly moments</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <img src="sister4.png" alt="Family love" class="w-full h-80 object-cover object-top">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="font-['Dancing_Script'] text-2xl">Family love</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <img src="sister5.png" alt="Best sister ever" class="w-full h-80 object-cover object-top">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="font-['Dancing_Script'] text-2xl">Best sister ever</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <img src="sister6.png" alt="Forever friends" class="w-full h-80 object-cover object-top">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="font-['Dancing_Script'] text-2xl">Forever friends</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="letter" class="py-20 bg-gradient-to-br from-blue-50 to-pink-50">
+        <div class="max-w-4xl mx-auto px-8">
+            <div class="birthday-card rounded-3xl p-12 shadow-2xl">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-['Dancing_Script'] text-secondary mb-4">A Birthday Letter to Judy</h2>
+                    <div class="w-16 h-1 bg-primary mx-auto rounded-full"></div>
+                </div>
+                <div class="space-y-6 text-lg font-['Poppins'] text-gray-700 leading-relaxed">
+                    <p class="text-2xl font-['Dancing_Script'] text-secondary">My Dear Sister Judy,</p>
+                    <p>Happy Birthday, Judy! As you celebrate another year of your incredible life on July 6, I want you to know how much you mean to me. You've always been more than just my sister—you're my partner-in-crime, my biggest cheerleader, and my best friend.</p>
+                    <p>Your laughter fills our home with joy, and your kindness makes everyone around you feel so loved. From our childhood adventures to the late-night talks that make us laugh until we cry, every moment with you is a gift I cherish deeply.</p>
+                    <p>You have this amazing ability to light up any room with your smile and make every day better with your spirit. Your strength and compassion inspire me to be a better brother and a better person. I'm so proud of the woman you've become, and I'm so grateful to have you by my side.</p>
+                    <p>Here's to celebrating you today and always, with all the cakes, roses, and love you deserve. May this year bring you endless happiness, new adventures, and all your heart's desires.</p>
+                    <p class="text-2xl font-['Dancing_Script'] text-secondary pt-4">
+                        With all my love,<br>
+                        Edwin 🎂🌹
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="messages" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-8 text-center">
+            <h2 class="text-4xl font-['Dancing_Script'] text-secondary mb-12">Birthday Wishes for Judy</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <button onclick="showMessage('love')" class="bg-gradient-to-r from-blue-400 to-pink-400 text-white py-4 px-8 !rounded-button font-['Poppins'] font-medium text-lg hover:from-blue-500 hover:to-pink-500 transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap">
+                    <div class="w-6 h-6 flex items-center justify-center inline-block mr-2">
+                        <i class="ri-cake-2-fill"></i>
+                    </div>
+                    Happy Birthday!
+                </button>
+                <button onclick="showMessage('amazing')" class="bg-gradient-to-r from-pink-400 to-blue-400 text-white py-4 px-8 !rounded-button font-['Poppins'] font-medium text-lg hover:from-pink-500 hover:to-blue-500 transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap">
+                    <div class="w-6 h-6 flex items-center justify-center inline-block mr-2">
+                        <i class="ri-star-fill"></i>
+                    </div>
+                    You're the Best!
+                </button>
+                <button onclick="showMessage('hug')" class="bg-gradient-to-r from-secondary to-primary text-white py-4 px-8 !rounded-button font-['Poppins'] font-medium text-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap">
+                    <div class="w-6 h-6 flex items-center justify-center inline-block mr-2">
+                        <i class="ri-flower-fill"></i>
+                    </div>
+                    Big Birthday Hug
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="celebration" class="relative py-32 bg-gradient-to-br from-blue-100 to-pink-100" style="background-image: url('https://readdy.ai/api/search-image?query=birthday%20celebration%20with%20cakes%20and%20roses%2C%20blue%20and%20pink%20theme%2C%20festive%20atmosphere%2C%20sparkling%20lights%2C%20bokeh%20effect%2C%20joyful%20mood%2C%20party%20setting%2C%20delicate%20flowers%2C%20enchanting%20scene&width=1920&height=1080&seq=birthday1&orientation=landscape'); background-size: cover; background-position: center;">
+        <div class="absolute inset-0 bg-white/70"></div>
+        <div class="relative z-10 max-w-4xl mx-auto px-8 text-center">
+            <div class="mb-12">
+                <p class="text-2xl font-['Poppins'] text-gray-700 mb-8 leading-relaxed">
+                    I built this website to celebrate you, Judy, because you make my world brighter every day.
+                </p>
+                <h2 class="text-6xl font-['Dancing_Script'] text-secondary mb-8 leading-tight">
+                    Happy Birthday, Judy!<br>
+                    <span class="text-primary">Here's to You!</span>
+                </h2>
+            </div>
+            <button onclick="showCelebration()" class="glow bg-gradient-to-r from-blue-400 to-pink-400 text-white py-6 px-16 !rounded-button font-['Poppins'] font-semibold text-2xl hover:from-blue-500 hover:to-pink-500 transition-all duration-300 hover:scale-110 shadow-2xl whitespace-nowrap">
+                <div class="w-8 h-8 flex items-center justify-center inline-block mr-3">
+                    <i class="ri-cake-2-fill text-3xl pulse-cake"></i>
+                </div>
+                Let's Celebrate!
+            </button>
+        </div>
+    </section>
+
+    <footer class="bg-secondary py-12">
+        <div class="max-w-4xl mx-auto px-8 text-center">
+            <div class="mb-6">
+                <div class="w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                    <i class="ri-cake-2-fill text-4xl text-pink-200 pulse-cake"></i>
+                </div>
+                <p class="text-3xl font-['Dancing_Script'] text-pink-100">Happy Birthday, Judy! 🎂🌹</p>
+            </div>
+            <p class="text-pink-200 font-['Poppins']">Made with all my love for my amazing sister</p>
+        </div>
+    </footer>
+
+    <div id="messagePopup" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="message-popup bg-white rounded-3xl p-8 max-w-md mx-4 text-center shadow-2xl">
+            <div class="w-16 h-16 flex items-center justify-center mx-auto mb-4 bg-gradient-to-r from-blue-400 to-pink-400 rounded-full">
+                <i id="messageIcon" class="ri-cake-2-fill text-3xl text-white"></i>
+            </div>
+            <h3 id="messageTitle" class="text-2xl font-['Dancing_Script'] text-secondary mb-4"></h3>
+            <p id="messageText" class="text-lg font-['Poppins'] text-gray-700 mb-6"></p>
+            <button onclick="hideMessage()" class="bg-gradient-to-r from-blue-400 to-pink-400 text-white py-3 px-8 !rounded-button font-['Poppins'] font-medium hover:from-blue-500 hover:to-pink-500 transition-all duration-300 whitespace-nowrap">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script id="messageSystem">
+        const messages = {
+            love: {
+                title: "Happy Birthday, Judy!",
+                text: "Judy, you're the best sister anyone could ask for! Wishing you a day filled with love, laughter, and all your favorite things! 🎂💖",
+                icon: "ri-cake-2-fill"
+            },
+            amazing: {
+                title: "You're the Best Sister!",
+                text: "Your energy, kindness, and spirit make you truly one of a kind. I'm so lucky to have you as my sister. Shine bright today, Judy! ✨",
+                icon: "ri-star-fill"
+            },
+            hug: {
+                title: "Big Birthday Hug!",
+                text: "Here's a huge virtual hug for the world's greatest sister! May your birthday be as warm and wonderful as you are, Judy! 🌹🤗",
+                icon: "ri-flower-fill"
+            }
+        };
+
+        function showMessage(type) {
+            const message = messages[type];
+            const popup = document.getElementById('messagePopup');
+            const title = document.getElementById('messageTitle');
+            const text = document.getElementById('messageText');
+            const icon = document.getElementById('messageIcon');
+            title.textContent = message.title;
+            text.textContent = message.text;
+            icon.className = `${message.icon} text-3xl text-white`;
+            popup.classList.remove('hidden');
+            setTimeout(() => {
+                popup.querySelector('.message-popup').classList.add('show');
+            }, 10);
+        }
+
+        function hideMessage() {
+            const popup = document.getElementById('messagePopup');
+            popup.querySelector('.message-popup').classList.remove('show');
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+
+    <script id="celebrationSystem">
+        function showCelebration() {
+            const confetti = document.createElement('div');
+            confetti.innerHTML = `
+                <div class="fixed inset-0 pointer-events-none z-40">
+                    <div class="absolute top-1/4 left-1/4 text-blue-400 text-4xl animate-bounce">🎂</div>
+                    <div class="absolute top-1/3 right-1/4 text-pink-400 text-3xl animate-pulse">🌹</div>
+                    <div class="absolute bottom-1/3 left-1/3 text-blue-500 text-5xl animate-spin">🎈</div>
+                    <div class="absolute top-1/2 right-1/3 text-pink-500 text-2xl animate-bounce">🎁</div>
+                    <div class="absolute bottom-1/4 right-1/2 text-blue-400 text-4xl animate-pulse">🎂</div>
+                </div>
+            `;
+            document.body.appendChild(confetti);
+            setTimeout(() => {
+                showMessage('celebration');
+            }, 1000);
+            setTimeout(() => {
+                document.body.removeChild(confetti);
+            }, 5000);
+        }
+
+        messages.celebration = {
+            title: "Let's Party, Judy! 🎉",
+            text: "Your birthday is the perfect reason to celebrate you! Here's to a day full of cakes, roses, and unforgettable moments! Love you, sis! 🎂🌹",
+            icon: "ri-cake-2-fill"
+        };
+    </script>
+
+    <script id="scrollAnimations">
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            const animatedElements = document.querySelectorAll('section:not(:first-child)');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+                observer.observe(el);
+            });
+        });
+    </script>
+
+    <script id="navigationAndMusic">
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const closeMenu = document.getElementById('closeMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const musicToggle = document.getElementById('musicToggle');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+
+            backgroundMusic.volume = 0.3;
+            backgroundMusic.play().catch(() => {});
+
+            let isPlaying = true;
+            musicToggle.addEventListener('click', function() {
+                if (isPlaying) {
+                    backgroundMusic.pause();
+                    musicToggle.innerHTML = '<i class="ri-volume-mute-fill text-xl"></i>';
+                } else {
+                    backgroundMusic.play();
+                    musicToggle.innerHTML = '<i class="ri-volume-up-fill text-xl"></i>';
+                }
+                isPlaying = !isPlaying;
+            });
+
+            menuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+            });
+
+            closeMenu.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    mobileMenu.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
